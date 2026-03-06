@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   CheckCircle2,
   XCircle,
@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useUserStore, type DataHealth, type SyncHealth, type OtaChannel } from '../stores/useUserStore';
+import { apiClient } from '../lib/axios';
 import { CredentialModal } from '../components/connect/CredentialModal';
 import { TopBar } from '../components/layout/TopBar';
 import { formatDateTime } from '../lib/utils';
@@ -222,18 +223,37 @@ function XeroSection() {
   const handleConnectXero = async () => {
     if (oauthPhase !== 'idle') return;
 
-    setOauthPhase('redirecting');
-    await new Promise<void>((r) => setTimeout(r, 1600));
-
-    setOauthPhase('authorising');
-    await new Promise<void>((r) => setTimeout(r, 1800));
-
-    setOauthPhase('syncing');
-    await new Promise<void>((r) => setTimeout(r, 1200));
-
-    setXeroConnected('The Grand Meridian Ltd');
-    setOauthPhase('idle');
-    toast.success('Xero connected — organisation synced successfully');
+    const hasApi = !!import.meta.env.VITE_API_BASE_URL;
+    if (hasApi) {
+      setOauthPhase('redirecting');
+      await new Promise<void>((r) => setTimeout(r, 800));
+      setOauthPhase('authorising');
+      try {
+        const { data: res } = await apiClient.post<{ success: boolean; organisation_name?: string; error?: string }>(
+          '/integrations/xero/connect',
+          {}
+        );
+        if (res.success && res.organisation_name) {
+          setXeroConnected(res.organisation_name);
+          toast.success('Xero connected — organisation synced successfully');
+        } else {
+          toast.error(res.error ?? 'Failed to connect Xero');
+        }
+      } catch {
+        toast.error('Failed to connect Xero');
+      }
+      setOauthPhase('idle');
+    } else {
+      setOauthPhase('redirecting');
+      await new Promise<void>((r) => setTimeout(r, 1600));
+      setOauthPhase('authorising');
+      await new Promise<void>((r) => setTimeout(r, 1800));
+      setOauthPhase('syncing');
+      await new Promise<void>((r) => setTimeout(r, 1200));
+      setXeroConnected('The Grand Meridian Ltd');
+      setOauthPhase('idle');
+      toast.success('Xero connected — organisation synced successfully');
+    }
   };
 
   const handleDisconnect = async () => {
@@ -516,7 +536,21 @@ function OtaSection() {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function IntegrationsPage() {
-  const { pmsConnected } = useUserStore();
+  const { pmsConnected, setXeroConnected, xeroConnected } = useUserStore();
+
+  useEffect(() => {
+    const hasApi = !!import.meta.env.VITE_API_BASE_URL;
+    if (!hasApi) return;
+    apiClient
+      .get<{ type: string; status: string; organisation_name?: string }[]>('/integrations')
+      .then(({ data }) => {
+        const xero = data.find((i) => i.type === 'xero' && i.status === 'connected');
+        if (xero?.organisation_name) {
+          setXeroConnected(xero.organisation_name);
+        }
+      })
+      .catch(() => {});
+  }, [setXeroConnected]);
 
   return (
     <div style={{ backgroundColor: '#0f172a', minHeight: '100vh' }}>

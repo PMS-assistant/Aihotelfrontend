@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { apiClient } from '../lib/axios';
 import { mockKPIs, mockAlerts, mockForecast, mockPickup, type KPIData, type AlertData, type ForecastPoint, type PickupPoint } from '../lib/mockData';
 
 interface DashboardData {
@@ -16,6 +17,8 @@ interface UseDashboardReturn {
   refetch: () => void;
 }
 
+const hasApiBaseUrl = !!import.meta.env.VITE_API_BASE_URL;
+
 export function useDashboard(): UseDashboardReturn {
   const [data, setData] = useState<DashboardData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -26,7 +29,21 @@ export function useDashboard(): UseDashboardReturn {
     setIsLoading(true);
     setError(null);
     try {
-      await new Promise<void>((resolve) => setTimeout(resolve, 1200));
+      if (hasApiBaseUrl) {
+        const { data: apiData } = await apiClient.get<DashboardData>('/dashboard/summary');
+        setData(apiData);
+      } else {
+        await new Promise<void>((resolve) => setTimeout(resolve, 400));
+        setData({
+          kpis: mockKPIs,
+          alerts: mockAlerts,
+          forecast: mockForecast,
+          pickup: mockPickup,
+        });
+      }
+      setLastRefresh(new Date());
+    } catch {
+      setError('Failed to load dashboard data. Please try again.');
       setData({
         kpis: mockKPIs,
         alerts: mockAlerts,
@@ -34,8 +51,6 @@ export function useDashboard(): UseDashboardReturn {
         pickup: mockPickup,
       });
       setLastRefresh(new Date());
-    } catch {
-      setError('Failed to load dashboard data. Please try again.');
     } finally {
       setIsLoading(false);
     }

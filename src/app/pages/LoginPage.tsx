@@ -3,6 +3,7 @@ import { useUserStore, type Role } from '../stores/useUserStore';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Building2, Loader2 } from 'lucide-react';
+import { apiClient } from '../lib/axios';
 
 const ROLES: { value: Role; label: string; description: string }[] = [
   { value: 'owner', label: 'Owner', description: 'Full platform access' },
@@ -25,16 +26,29 @@ export default function LoginPage() {
       return;
     }
     setIsLoading(true);
-    await new Promise<void>((r) => setTimeout(r, 1000));
-    login(email.trim(), role);
-    setIsLoading(false);
+    try {
+      const hasApi = !!import.meta.env.VITE_API_BASE_URL;
+      if (hasApi) {
+        const { data: res } = await apiClient.post<{ user: { id: string; email: string; role: Role; hotelId: string } }>(
+          '/auth/login',
+          { email: email.trim(), role }
+        );
+        useUserStore.getState().setAuthFromApi(res.user);
+      } else {
+        await new Promise<void>((r) => setTimeout(r, 1000));
+        login(email.trim(), role);
+      }
 
-    // Read fresh state after login
-    const { pmsConnected } = useUserStore.getState();
-    if (!pmsConnected) {
-      navigate('/integrations', { replace: true });
-    } else {
-      navigate(role === 'staff' ? '/staff' : '/dashboard', { replace: true });
+      const { pmsConnected } = useUserStore.getState();
+      if (!pmsConnected) {
+        navigate('/integrations', { replace: true });
+      } else {
+        navigate(role === 'staff' ? '/staff' : '/dashboard', { replace: true });
+      }
+    } catch (err) {
+      toast.error('Login failed. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 

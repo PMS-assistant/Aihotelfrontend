@@ -3,11 +3,22 @@ import { Outlet, useNavigate, useLocation } from 'react-router';
 import { Toaster } from 'sonner';
 import { Sidebar } from './Sidebar';
 import { useUserStore } from '../../stores/useUserStore';
+import { apiClient } from '../../lib/axios';
 
 export function Root() {
-  const { isAuthenticated, role, pmsConnected } = useUserStore();
+  const { isAuthenticated, role, pmsConnected, setAuthFromApi } = useUserStore();
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    const hasApi = !!import.meta.env.VITE_API_BASE_URL;
+    if (hasApi && isAuthenticated) {
+      apiClient
+        .get<{ id: string; email: string; role: string; hotelId: string }>('/auth/me')
+        .then(({ data }) => setAuthFromApi(data))
+        .catch(() => {});
+    }
+  }, [isAuthenticated, setAuthFromApi]);
 
   useEffect(() => {
     if (!isAuthenticated) {

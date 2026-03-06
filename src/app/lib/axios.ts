@@ -11,7 +11,7 @@ export const apiClient = axios.create({
 
 apiClient.interceptors.request.use(
   (config) => {
-    const stored = localStorage.getItem('meridian-user-store');
+    const stored = localStorage.getItem('meridian-user-store-v2');
     if (stored) {
       try {
         const parsed = JSON.parse(stored);
@@ -32,7 +32,7 @@ apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('meridian-user-store');
+      localStorage.removeItem('meridian-user-store-v2');
       window.location.href = '/login';
     }
     return Promise.reject(error);

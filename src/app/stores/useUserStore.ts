@@ -46,6 +46,7 @@ interface UserState {
 
   // Actions
   login: (email: string, role: Role) => void;
+  setAuthFromApi: (user: { id: string; email: string; role: Role; hotelId: string }) => void;
   logout: () => void;
   setPmsConnected: (connected: boolean, syncTime?: string) => void;
   setPmsDataHealth: (health: DataHealth) => void;
@@ -65,7 +66,7 @@ export const useUserStore = create<UserState>()(
       hotelName: 'The Grand Meridian',
       hotelId: 'hotel_001',
 
-      pmsConnected: false,
+      pmsConnected: true, // Demo: allow Dashboard/Chat without PMS. Set false when real PMS connected.
       pmsLastSyncTime: null,
       pmsDataHealth: 'healthy',
 
@@ -82,6 +83,15 @@ export const useUserStore = create<UserState>()(
           userId: `user_${Date.now()}`,
           email,
           role,
+        }),
+
+      setAuthFromApi: (user) =>
+        set({
+          isAuthenticated: true,
+          userId: user.id,
+          email: user.email,
+          role: user.role,
+          hotelId: user.hotelId,
         }),
 
       logout: () =>
