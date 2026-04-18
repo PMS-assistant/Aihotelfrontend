@@ -55,10 +55,10 @@ export default function LoginPage() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email.trim()) {
-      toast.error('Email is required');
-      return;
-    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email.trim()) { toast.error('Email is required'); return; }
+    if (!emailRegex.test(email.trim())) { toast.error('Enter a valid email address'); return; }
+    if (!password) { toast.error('Password is required'); return; }
     setIsLoading(true);
     try {
       const hasApi = !!import.meta.env.VITE_API_BASE_URL;
@@ -116,7 +116,7 @@ export default function LoginPage() {
         <div className="relative flex items-center gap-2.5">
           <div
             className="w-7 h-7 rounded-md flex items-center justify-center text-xs font-bold"
-            style={{ backgroundColor: 'var(--vzir-gold)', color: 'var(--vzir-bg)' }}
+            style={{ backgroundColor: 'var(--vzir-primary)', color: 'var(--vzir-bg)' }}
           >
             V
           </div>
@@ -132,7 +132,7 @@ export default function LoginPage() {
         <div className="relative flex-1 flex flex-col justify-center max-w-lg">
           <div
             className="mb-8 w-10 h-px"
-            style={{ backgroundColor: 'var(--vzir-gold)', opacity: 0.6 }}
+            style={{ backgroundColor: 'var(--vzir-primary)', opacity: 0.6 }}
           />
           <blockquote
             className="text-3xl leading-snug mb-4 transition-all duration-400"
@@ -168,7 +168,7 @@ export default function LoginPage() {
                   width: i === quoteIndex ? '20px' : '6px',
                   height: '6px',
                   backgroundColor:
-                    i === quoteIndex ? 'var(--vzir-gold)' : 'var(--vzir-border-hover)',
+                    i === quoteIndex ? 'var(--vzir-primary)' : 'var(--vzir-border-hover)',
                 }}
               />
             ))}
@@ -190,7 +190,7 @@ export default function LoginPage() {
         <div className="flex items-center gap-2.5 mb-10 lg:hidden">
           <div
             className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold"
-            style={{ backgroundColor: 'var(--vzir-gold)', color: 'var(--vzir-bg)' }}
+            style={{ backgroundColor: 'var(--vzir-primary)', color: 'var(--vzir-bg)' }}
           >
             V
           </div>
@@ -234,7 +234,7 @@ export default function LoginPage() {
                   border: '1px solid var(--vzir-border)',
                   color: 'var(--vzir-text)',
                 }}
-                onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--vzir-gold-dim)')}
+                onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--vzir-primary-dim)')}
                 onBlur={(e) => (e.currentTarget.style.borderColor = 'var(--vzir-border)')}
               />
             </div>
@@ -259,7 +259,7 @@ export default function LoginPage() {
                   border: '1px solid var(--vzir-border)',
                   color: 'var(--vzir-text)',
                 }}
-                onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--vzir-gold-dim)')}
+                onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--vzir-primary-dim)')}
                 onBlur={(e) => (e.currentTarget.style.borderColor = 'var(--vzir-border)')}
               />
             </div>
@@ -270,7 +270,7 @@ export default function LoginPage() {
               disabled={isLoading}
               className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm transition-all mt-2 disabled:opacity-50"
               style={{
-                backgroundColor: 'var(--vzir-gold)',
+                backgroundColor: 'var(--vzir-primary)',
                 color: 'var(--vzir-bg)',
                 fontWeight: 600,
                 letterSpacing: '0.02em',
@@ -301,7 +301,7 @@ export default function LoginPage() {
             <Link
               to="/signup"
               className="transition-colors"
-              style={{ color: 'var(--vzir-gold)', fontWeight: 500 }}
+              style={{ color: 'var(--vzir-primary)', fontWeight: 500 }}
             >
               Create an account
             </Link>

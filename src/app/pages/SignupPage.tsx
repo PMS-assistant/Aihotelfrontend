@@ -14,14 +14,15 @@ export default function SignupPage() {
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email.trim() || !hotelName.trim()) {
-      toast.error('Email and hotel name are required');
-      return;
-    }
-    if (!password) {
-      toast.error('Password is required');
-      return;
-    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const hasLetter = /[A-Za-z]/.test(password);
+    const hasNumber = /[0-9]/.test(password);
+    if (!hotelName.trim()) { toast.error('Hotel name is required'); return; }
+    if (!email.trim()) { toast.error('Email is required'); return; }
+    if (!emailRegex.test(email.trim())) { toast.error('Enter a valid email address'); return; }
+    if (!password) { toast.error('Password is required'); return; }
+    if (password.length < 8) { toast.error('Password must be at least 8 characters'); return; }
+    if (!hasLetter || !hasNumber) { toast.error('Password must contain letters and numbers'); return; }
     setIsLoading(true);
     try {
       const hasApi = !!import.meta.env.VITE_API_BASE_URL;
@@ -54,7 +55,7 @@ export default function SignupPage() {
     color: 'var(--vzir-text)',
   };
   const focusIn = (e: React.FocusEvent<HTMLInputElement>) =>
-    (e.currentTarget.style.borderColor = 'var(--vzir-gold-dim)');
+    (e.currentTarget.style.borderColor = 'var(--vzir-primary-dim)');
   const focusOut = (e: React.FocusEvent<HTMLInputElement>) =>
     (e.currentTarget.style.borderColor = 'var(--vzir-border)');
   const labelStyle: React.CSSProperties = {
@@ -93,7 +94,7 @@ export default function SignupPage() {
         <div className="relative flex items-center gap-2.5">
           <div
             className="w-7 h-7 rounded-md flex items-center justify-center text-xs font-bold"
-            style={{ backgroundColor: 'var(--vzir-gold)', color: 'var(--vzir-bg)' }}
+            style={{ backgroundColor: 'var(--vzir-primary)', color: 'var(--vzir-bg)' }}
           >
             V
           </div>
@@ -106,7 +107,7 @@ export default function SignupPage() {
         </div>
 
         <div className="relative flex-1 flex flex-col justify-center max-w-lg">
-          <div className="mb-8 w-10 h-px" style={{ backgroundColor: 'var(--vzir-gold)', opacity: 0.6 }} />
+          <div className="mb-8 w-10 h-px" style={{ backgroundColor: 'var(--vzir-primary)', opacity: 0.6 }} />
           <h2
             className="text-3xl leading-snug mb-4"
             style={{ color: 'var(--vzir-text)', fontWeight: 300, letterSpacing: '-0.01em' }}
@@ -123,7 +124,7 @@ export default function SignupPage() {
               'Event-driven demand forecasting',
             ].map((f) => (
               <div key={f} className="flex items-center gap-3">
-                <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: 'var(--vzir-gold)' }} />
+                <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: 'var(--vzir-primary)' }} />
                 <span className="text-sm" style={{ color: 'var(--vzir-text-2)' }}>{f}</span>
               </div>
             ))}
@@ -143,7 +144,7 @@ export default function SignupPage() {
         <div className="flex items-center gap-2.5 mb-10 lg:hidden">
           <div
             className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold"
-            style={{ backgroundColor: 'var(--vzir-gold)', color: 'var(--vzir-bg)' }}
+            style={{ backgroundColor: 'var(--vzir-primary)', color: 'var(--vzir-bg)' }}
           >
             V
           </div>
@@ -217,7 +218,7 @@ export default function SignupPage() {
               disabled={isLoading}
               className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm transition-all mt-2 disabled:opacity-50"
               style={{
-                backgroundColor: 'var(--vzir-gold)',
+                backgroundColor: 'var(--vzir-primary)',
                 color: 'var(--vzir-bg)',
                 fontWeight: 600,
                 letterSpacing: '0.02em',
@@ -239,7 +240,7 @@ export default function SignupPage() {
 
           <p className="text-center text-sm" style={{ color: 'var(--vzir-text-2)' }}>
             Already have an account?{' '}
-            <Link to="/login" style={{ color: 'var(--vzir-gold)', fontWeight: 500 }}>
+            <Link to="/login" style={{ color: 'var(--vzir-primary)', fontWeight: 500 }}>
               Sign in
             </Link>
           </p>

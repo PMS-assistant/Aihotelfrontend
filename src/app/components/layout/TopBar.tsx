@@ -21,47 +21,46 @@ export function TopBar({
   const { pmsDataHealth } = useUserStore();
 
   const healthConfig = {
-    healthy: { label: 'Live', color: '#22c55e', bg: 'rgba(34,197,94,0.1)' },
-    delayed: { label: 'Delayed', color: '#f59e0b', bg: 'rgba(245,158,11,0.1)' },
-    error: { label: 'Error', color: '#ef4444', bg: 'rgba(239,68,68,0.1)' },
+    healthy: { label: 'Live', color: '#10B981', bg: 'rgba(16,185,129,0.08)', dot: '#10B981' },
+    delayed: { label: 'Delayed', color: '#D97706', bg: 'rgba(217,119,6,0.08)', dot: '#D97706' },
+    error: { label: 'Error', color: '#DC2626', bg: 'rgba(220,38,38,0.08)', dot: '#DC2626' },
   };
 
   const health = healthConfig[pmsDataHealth];
 
   return (
     <header
-      className="sticky top-0 z-20 flex items-center justify-between px-6 py-4 border-b"
-      style={{ backgroundColor: '#0f172a', borderColor: '#1e293b' }}
+      className="sticky top-0 z-20 flex items-center justify-between px-6 py-3.5 border-b"
+      style={{ backgroundColor: 'var(--vzir-surface)', borderColor: 'var(--vzir-border)' }}
     >
       <div className="flex items-center gap-4">
         <button
           onClick={onMenuClick}
-          className="md:hidden p-1.5 rounded-md transition-colors hover:bg-slate-800"
-          style={{ color: '#64748b' }}
+          className="md:hidden p-1.5 rounded-md transition-colors"
+          style={{ color: 'var(--vzir-text-3)' }}
+          onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--vzir-surface-2)')}
+          onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
         >
           <Menu size={18} />
         </button>
-        <h1 className="text-base" style={{ color: '#f1f5f9', fontWeight: 600 }}>
+        <h1 className="text-base" style={{ color: 'var(--vzir-text)', fontWeight: 600 }}>
           {title}
         </h1>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3">
         {/* Data health badge */}
         <div
-          className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs"
+          className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium"
           style={{ backgroundColor: health.bg, color: health.color }}
         >
-          <span
-            className="w-1.5 h-1.5 rounded-full"
-            style={{ backgroundColor: health.color }}
-          />
+          <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: health.dot }} />
           {health.label}
         </div>
 
         {/* Last refresh */}
         {lastRefresh && (
-          <span className="hidden lg:block text-xs" style={{ color: '#475569' }}>
+          <span className="hidden lg:block text-xs" style={{ color: 'var(--vzir-text-3)' }}>
             Updated {formatDateTime(lastRefresh.toISOString())}
           </span>
         )}
@@ -71,11 +70,14 @@ export function TopBar({
           <button
             onClick={onRefresh}
             disabled={isRefreshing}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs transition-colors hover:bg-slate-700 disabled:opacity-50"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all disabled:opacity-50"
             style={{
-              backgroundColor: '#1e293b',
-              color: '#94a3b8',
+              backgroundColor: 'var(--vzir-surface-2)',
+              color: 'var(--vzir-text-2)',
+              border: '1px solid var(--vzir-border)',
             }}
+            onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'var(--vzir-border-hover)')}
+            onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'var(--vzir-border)')}
           >
             <RefreshCw
               size={12}

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL ?? '/api',
+  baseURL: import.meta.env.VITE_API_URL ?? import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000',
   timeout: 15000,
   headers: {
     'Content-Type': 'application/json',
@@ -38,7 +38,7 @@ apiClient.interceptors.response.use(
     const detail = error.response?.data?.detail;
     // Clear session on token errors (401) or missing token (403 "Not authenticated")
     if (status === 401 || (status === 403 && detail === 'Not authenticated')) {
-      localStorage.removeItem('meridian-user-store-v2');
+      localStorage.removeItem('vzir-user-store-v1');
       window.location.href = '/login';
     }
     return Promise.reject(error);
