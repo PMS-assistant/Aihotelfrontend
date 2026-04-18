@@ -9,6 +9,8 @@ import IntegrationsPage from './pages/IntegrationsPage';
 import StaffPage from './pages/StaffPage';
 import AlertsPage from './pages/AlertsPage';
 import NotFoundPage from './pages/NotFoundPage';
+import SettingsPage from './pages/SettingsPage';
+import HomePage from './pages/HomePage';
 
 export const router = createBrowserRouter([
   {
@@ -29,7 +31,11 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        loader: () => redirect('/chat'),
+        loader: () => redirect('/home'),
+      },
+      {
+        path: 'home',
+        Component: HomePage,
       },
       {
         path: 'chat',
@@ -70,7 +76,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'settings',
-        loader: () => redirect('/chat'),
+        Component: SettingsPage,
       },
       {
         path: '*',

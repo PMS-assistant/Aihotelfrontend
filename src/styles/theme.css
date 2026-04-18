@@ -2,35 +2,51 @@
 
 /* ─── Vzir Luxury Design Tokens ─────────────────────────────────── */
 :root {
-  /* Backgrounds */
-  --vzir-bg:            #0C0A08;
-  --vzir-surface:       #141210;
-  --vzir-surface-2:     #1C1916;
-  --vzir-surface-3:     #252119;
-  --vzir-border:        #2C2520;
-  --vzir-border-hover:  #3D342A;
+  /* ── Main content backgrounds (light) ── */
+  --vzir-bg:            #F8FAFC;
+  --vzir-surface:       #FFFFFF;
+  --vzir-surface-2:     #F1F5F9;
+  --vzir-surface-3:     #E8EDF2;
+  --vzir-border:        #E2E8F0;
+  --vzir-border-hover:  #CBD5E1;
 
-  /* Gold accent */
-  --vzir-gold:          #C9A96E;
-  --vzir-gold-light:    #D9BC89;
-  --vzir-gold-dim:      #7A6540;
-  --vzir-gold-glow:     rgba(201, 169, 110, 0.12);
-  --vzir-gold-glow-md:  rgba(201, 169, 110, 0.20);
+  /* ── Sidebar (always dark) ── */
+  --vzir-sidebar-bg:    #0F172A;
+  --vzir-sidebar-surface: #1E293B;
+  --vzir-sidebar-border: #1E293B;
+  --vzir-sidebar-hover: #1E293B;
+  --vzir-sidebar-text:  #F1F5F9;
+  --vzir-sidebar-text-2: #94A3B8;
+  --vzir-sidebar-text-3: #475569;
 
-  /* Text */
-  --vzir-text:          #EDE8E0;
-  --vzir-text-2:        #9A8E82;
-  --vzir-text-3:        #5C5248;
+  /* ── Primary accent — Violet ── */
+  --vzir-primary:       #7C3AED;
+  --vzir-primary-light: #A78BFA;
+  --vzir-primary-dim:   #5B21B6;
+  --vzir-primary-glow:  rgba(124, 58, 237, 0.10);
+  --vzir-primary-glow-md: rgba(124, 58, 237, 0.18);
 
-  /* Status */
-  --vzir-green:         #4ADE80;
-  --vzir-green-dim:     rgba(74, 222, 128, 0.12);
-  --vzir-red:           #F87171;
-  --vzir-red-dim:       rgba(248, 113, 113, 0.12);
-  --vzir-amber:         #FBBF24;
-  --vzir-amber-dim:     rgba(251, 191, 36, 0.12);
+  /* Gold aliases → Violet (onboarding uses these) */
+  --vzir-gold:          #7C3AED;
+  --vzir-gold-light:    #A78BFA;
+  --vzir-gold-dim:      #5B21B6;
+  --vzir-gold-glow:     rgba(124, 58, 237, 0.10);
+  --vzir-gold-glow-md:  rgba(124, 58, 237, 0.18);
 
-  /* Sidebar */
+  /* ── Text ── */
+  --vzir-text:          #0F172A;
+  --vzir-text-2:        #64748B;
+  --vzir-text-3:        #94A3B8;
+
+  /* ── Status ── */
+  --vzir-green:         #10B981;
+  --vzir-green-dim:     rgba(16, 185, 129, 0.10);
+  --vzir-red:           #EF4444;
+  --vzir-red-dim:       rgba(239, 68, 68, 0.10);
+  --vzir-amber:         #F59E0B;
+  --vzir-amber-dim:     rgba(245, 158, 11, 0.10);
+
+  /* ── Sidebar width ── */
   --vzir-sidebar-w:     260px;
 }
 /* ──────────────────────────────────────────────────────────────── */

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router';
-import { ArrowRight, ChevronRight } from 'lucide-react';
+import { ArrowRight, ChevronRight, ArrowLeft } from 'lucide-react';
 import { useUserStore } from '../stores/useUserStore';
 
 /* ─── Slide definitions ─────────────────────────────────────────── */
@@ -9,8 +9,8 @@ const SLIDES = [
     id: 1,
     words: ['One AI.', 'Every Answer.'],
     sub: 'Ask anything about your property. Vzir reads from every connected system and gives you one clear answer.',
-    gradient: 'radial-gradient(ellipse at 35% 55%, rgba(201,169,110,0.22) 0%, rgba(12,10,8,0.95) 55%), linear-gradient(160deg, #0C0A08 0%, #1a1208 100%)',
-    accent: '#C9A96E',
+    gradient: 'radial-gradient(ellipse at 35% 55%, rgba(99,102,241,0.22) 0%, rgba(12,10,8,0.95) 55%), linear-gradient(160deg, #0C0A08 0%, #0d0c1a 100%)',
+    accent: '#6366F1',
     visual: <VisualRings />,
   },
   {
@@ -49,8 +49,8 @@ const SLIDES = [
     id: 6,
     words: ['Your Hotel.', 'Starts Now.'],
     sub: "You're all set. Connect your first system and let Vzir do the rest.",
-    gradient: 'radial-gradient(ellipse at 50% 50%, rgba(201,169,110,0.25) 0%, rgba(12,10,8,0.97) 55%), linear-gradient(160deg, #0C0A08 0%, #1a1208 100%)',
-    accent: '#C9A96E',
+    gradient: 'radial-gradient(ellipse at 50% 50%, rgba(99,102,241,0.25) 0%, rgba(12,10,8,0.97) 55%), linear-gradient(160deg, #0C0A08 0%, #0d0c1a 100%)',
+    accent: '#6366F1',
     visual: <VisualFinal />,
   },
 ];
@@ -122,17 +122,31 @@ export default function OnboardingPage() {
 
       {/* Top bar */}
       <div className="relative flex items-center justify-between px-8 py-6 z-10">
-        <div className="flex items-center gap-2">
-          <div
-            className="w-6 h-6 rounded flex items-center justify-center text-xs font-bold"
-            style={{ backgroundColor: 'var(--vzir-gold)', color: 'var(--vzir-bg)' }}
+        {/* Back arrow — shown on all slides except the first */}
+        {current > 0 ? (
+          <button
+            onClick={() => { if (timerRef.current) clearTimeout(timerRef.current); goTo(current - 1); }}
+            className="flex items-center gap-1.5 text-sm transition-colors px-3 py-1.5 rounded-lg"
+            style={{ color: 'rgba(255,255,255,0.45)' }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = 'rgba(255,255,255,0.85)')}
+            onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255,255,255,0.45)')}
           >
-            V
+            <ArrowLeft size={14} />
+            <span>Back</span>
+          </button>
+        ) : (
+          <div className="flex items-center gap-2">
+            <div
+              className="w-6 h-6 rounded flex items-center justify-center text-xs font-bold"
+              style={{ backgroundColor: 'var(--vzir-primary)', color: 'var(--vzir-bg)' }}
+            >
+              V
+            </div>
+            <span className="text-sm tracking-widest uppercase" style={{ color: 'var(--vzir-text)', fontWeight: 500 }}>
+              Vzir
+            </span>
           </div>
-          <span className="text-sm tracking-widest uppercase" style={{ color: 'var(--vzir-text)', fontWeight: 500 }}>
-            Vzir
-          </span>
-        </div>
+        )}
 
         <button
           onClick={handleEnter}
@@ -327,7 +341,7 @@ function VisualRings() {
           style={{
             width: `${120 + i * 80}px`,
             height: `${120 + i * 80}px`,
-            borderColor: 'rgba(201,169,110,0.15)',
+            borderColor: 'rgba(99,102,241,0.15)',
             animation: `vzir-pulse-ring ${2 + i * 0.6}s ease-out ${i * 0.4}s infinite`,
           }}
         />
@@ -335,11 +349,11 @@ function VisualRings() {
       <div
         className="relative z-10 w-24 h-24 rounded-2xl flex items-center justify-center text-5xl font-black"
         style={{
-          backgroundColor: 'rgba(201,169,110,0.1)',
-          border: '1px solid rgba(201,169,110,0.3)',
-          color: '#C9A96E',
+          backgroundColor: 'rgba(99,102,241,0.1)',
+          border: '1px solid rgba(99,102,241,0.3)',
+          color: '#6366F1',
           animation: 'vzir-float 3s ease-in-out infinite',
-          boxShadow: '0 0 60px rgba(201,169,110,0.2)',
+          boxShadow: '0 0 60px rgba(99,102,241,0.2)',
         }}
       >
         V
@@ -463,13 +477,13 @@ function VisualGrid() {
 
   const colorsMap: Record<string, string> = {
     occupied: 'rgba(34,197,100,0.2)',
-    gold: 'rgba(201,169,110,0.35)',
+    gold: 'rgba(99,102,241,0.35)',
     empty: 'rgba(255,255,255,0.05)',
     green: 'rgba(34,197,100,0.5)',
   };
   const borderMap: Record<string, string> = {
     occupied: 'rgba(34,197,100,0.3)',
-    gold: 'rgba(201,169,110,0.5)',
+    gold: 'rgba(99,102,241,0.5)',
     empty: 'rgba(255,255,255,0.08)',
     green: 'rgba(34,197,100,0.6)',
   };
@@ -484,7 +498,7 @@ function VisualGrid() {
             style={{
               backgroundColor: colorsMap[r.status],
               border: `1px solid ${borderMap[r.status]}`,
-              color: r.status === 'gold' ? '#C9A96E' : r.status === 'green' ? '#22C564' : 'rgba(255,255,255,0.2)',
+              color: r.status === 'gold' ? '#6366F1' : r.status === 'green' ? '#22C564' : 'rgba(255,255,255,0.2)',
               fontWeight: 500,
               fontSize: '10px',
               animation: `vzir-fade-up 0.4s ease ${r.delay} both`,
@@ -495,7 +509,7 @@ function VisualGrid() {
         ))}
       </div>
       <div className="flex gap-4 mt-2">
-        {[{ c: 'rgba(34,197,100,0.5)', l: 'Occupied' }, { c: 'rgba(201,169,110,0.35)', l: 'Revenue opp.' }, { c: 'rgba(255,255,255,0.06)', l: 'Available' }].map((item) => (
+        {[{ c: 'rgba(34,197,100,0.5)', l: 'Occupied' }, { c: 'rgba(99,102,241,0.35)', l: 'Revenue opp.' }, { c: 'rgba(255,255,255,0.06)', l: 'Available' }].map((item) => (
           <div key={item.l} className="flex items-center gap-1.5">
             <div className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: item.c }} />
             <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.35)' }}>{item.l}</span>
@@ -512,10 +526,10 @@ function VisualFinal() {
       <div
         className="w-32 h-32 rounded-3xl flex items-center justify-center text-7xl font-black"
         style={{
-          background: 'linear-gradient(135deg, rgba(201,169,110,0.25), rgba(201,169,110,0.08))',
-          border: '1px solid rgba(201,169,110,0.3)',
-          color: '#C9A96E',
-          boxShadow: '0 0 80px rgba(201,169,110,0.15)',
+          background: 'linear-gradient(135deg, rgba(99,102,241,0.25), rgba(99,102,241,0.08))',
+          border: '1px solid rgba(99,102,241,0.3)',
+          color: '#6366F1',
+          boxShadow: '0 0 80px rgba(99,102,241,0.15)',
           animation: 'vzir-float 3s ease-in-out infinite',
         }}
       >
@@ -527,13 +541,13 @@ function VisualFinal() {
             key={f}
             className="flex items-center gap-2 px-4 py-2 rounded-full text-xs"
             style={{
-              backgroundColor: 'rgba(201,169,110,0.08)',
-              border: '1px solid rgba(201,169,110,0.15)',
-              color: 'rgba(201,169,110,0.7)',
+              backgroundColor: 'rgba(99,102,241,0.08)',
+              border: '1px solid rgba(99,102,241,0.15)',
+              color: 'rgba(99,102,241,0.7)',
               animation: `vzir-fade-up 0.5s ease ${0.2 + i * 0.1}s both`,
             }}
           >
-            <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#C9A96E' }} />
+            <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#6366F1' }} />
             {f}
           </div>
         ))}
